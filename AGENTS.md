@@ -184,6 +184,8 @@ versioning, not `vMAJOR.MINOR.PATCH`.
 
 `brew style` is the local loop. Run it before pushing a cask change.
 
+CodeQL is not run. The repository is on `crypto-no-codeql`.
+
 ## Delegated agents
 
 A delegate is given a bounded question about a named revision and named paths,

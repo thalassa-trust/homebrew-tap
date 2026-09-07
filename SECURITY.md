@@ -20,6 +20,7 @@ checks it against a pinned `sha256`, and installs the app and CLI.
 - No secrets in the tree. The token CI uses is `GITHUB_TOKEN`.
 - The cask checksum is the control. A wrong hash is a failed install, not a
   silent substitute.
+- CodeQL is not run.
 
 ## Threat model
 
