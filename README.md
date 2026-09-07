@@ -8,7 +8,7 @@ runs a custom trigger on your machine when it is physically separated from you.
 ## Install
 
 ```sh
-brew tap OA/tap
+brew tap thalassa-trust/tap
 brew install --cask buskill
 ```
 
