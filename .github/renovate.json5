@@ -1,8 +1,13 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
 
+  // This repository has no package manifest and no lockfile. Its whole
+  // dependency surface is the action pins in `.github/workflows`. The
+  // manager list says that and nothing more, so adding a manifest later
+  // is a deliberate widening.
   extends: [
     "config:recommended",
+    ":dependencyDashboard",
     ":semanticCommits",
     "helpers:pinGitHubActionDigests",
   ],
@@ -16,6 +21,9 @@
 
   minimumReleaseAge: "7 days",
   internalChecksFilter: "strict",
+
+  prConcurrentLimit: 3,
+  prHourlyLimit: 2,
   automerge: false,
 
   // Load-bearing. Organisation rulesets require signatures on every branch
@@ -23,4 +31,29 @@
   // what Renovate creates; the git CLI would produce unverifiable commits
   // and the push would be rejected.
   platformCommit: "enabled",
+
+  osvVulnerabilityAlerts: true,
+
+  vulnerabilityAlerts: {
+    enabled: true,
+    minimumReleaseAge: null,
+    schedule: [],
+    automerge: false,
+    labels: ["dependencies", "security"],
+  },
+
+  packageRules: [
+    {
+      description: [
+        "Action digest refreshes. The tag is unchanged and only the resolved digest moves, so this re-pins the same declared release. pinact checks the result in `gate:ci`.",
+      ],
+      matchManagers: ["github-actions"],
+      addLabels: ["security"],
+    },
+  ],
+
+  // NOT managed here, deliberately: the tool versions in
+  // `.github/workflows/ci.yml` and `scan.yml` that are fetched by URL and
+  // checked against a `SHA256` beside them. Renovate can move a version
+  // string but cannot compute the checksum that must move with it.
 }

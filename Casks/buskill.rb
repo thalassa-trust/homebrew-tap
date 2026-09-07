@@ -15,7 +15,7 @@ cask "buskill" do
 
   depends_on :macos
 
-  # The .app bundle carries the version in its name, so it must be interpolated.
+  # Bundle name includes the version, so interpolate it.
   app "buskill-v#{version}.app"
   binary "#{appdir}/buskill-v#{version}.app/Contents/MacOS/buskill"
 

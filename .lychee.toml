@@ -1,0 +1,5 @@
+# Offline link checking. `--offline` in CI means only local paths are resolved,
+# so a dead external URL is not a red gate on somebody else's outage.
+exclude_path = [".git"]
+include_fragments = "anchor-only"
+timeout = 10

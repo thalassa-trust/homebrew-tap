@@ -1,0 +1,64 @@
+name: Scan
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scan-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  secrets:
+    name: Secret scan
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      # Full history. A secret is as reachable from an old commit as from the
+      # tip, and a shallow clone would scan neither it nor the commit that
+      # removed it.
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # gitleaks/gitleaks-action requires a paid GITLEAKS_LICENSE for
+      # organisation-owned repositories, so the tool is fetched from its own
+      # release and checksummed instead. Same scanner, no licence.
+      - name: gitleaks
+        env:
+          GITLEAKS_VERSION: "8.30.1"
+          GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+        run: |
+          set -euo pipefail
+          workdir="$(mktemp -d)"
+          curl --fail --silent --show-error --location --retry 3 \
+            --output "${workdir}/gitleaks.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  ${workdir}/gitleaks.tar.gz" | sha256sum --check --strict -
+          tar --extract --gzip --file "${workdir}/gitleaks.tar.gz" --directory "${workdir}" gitleaks
+          "${workdir}/gitleaks" git . --no-banner --redact --exit-code 1
+          "${workdir}/gitleaks" dir . --no-banner --redact --exit-code 1
+
+  gate:
+    name: "gate:scan"
+    if: always()
+    needs: [secrets]
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Require every dependency to succeed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          set -euo pipefail
+          test -n "${RESULTS}"
+          for result in ${RESULTS}; do test "${result}" = success; done

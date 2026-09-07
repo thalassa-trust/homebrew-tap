@@ -1,0 +1,11 @@
+# Who answers for a path, in a form GitHub reads.
+#
+# This is not a review control and must not be paired with one while the
+# organisation has a single member: GitHub does not request a review from
+# the author and the only eligible owner here is the author of every change.
+# A rule nobody can satisfy is worse than none.
+
+* @oa
+
+/Casks/ @oa
+/.github/ @oa
