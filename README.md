@@ -19,7 +19,9 @@ brew install --cask buskill
 
 Upstream's macOS build is ad-hoc signed: no Developer ID, no notarization.
 Gatekeeper blocks the first Finder launch. Stripping `com.apple.quarantine`
-does not change that. Homebrew has no `--no-quarantine`.
+does not change that.
+
+Homebrew has no `--no-quarantine`.
 
 | Step | Action |
 | --- | --- |

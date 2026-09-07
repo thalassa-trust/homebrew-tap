@@ -102,14 +102,17 @@ jobs:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: brew audit --cask --online --tap thalassa-trust/tap
 
-      # Homebrew 6 refuses untrusted third-party casks. Trust, then install.
+      # Homebrew refuses untrusted third-party casks. Trust, then install.
       - name: Install smoke test
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           brew trust --cask thalassa-trust/tap/buskill
           brew install --cask thalassa-trust/tap/buskill
-          test -d "/Applications/buskill-v0.7.0.app"
+          version="$(sed -n 's/^  version "\(.*\)"/\1/p' Casks/buskill.rb)"
+          test -n "${version}"
+          test -d "/Applications/buskill-v${version}.app"
           test -x "$(brew --prefix)/bin/buskill"
           brew uninstall --cask thalassa-trust/tap/buskill
 

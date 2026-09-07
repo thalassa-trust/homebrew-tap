@@ -2,8 +2,7 @@ cask "buskill" do
   version "0.7.0"
   sha256 "3d37067496dad3893c02d1a40cb606026ab2684e8cdc908f28c746cbfcf271f0"
 
-  url "https://github.com/BusKill/buskill-app/releases/download/v#{version}/buskill-mac-v#{version}-x86_64.dmg",
-      verified: "github.com/BusKill/buskill-app/"
+  url "https://github.com/BusKill/buskill-app/releases/download/v#{version}/buskill-mac-v#{version}-x86_64.dmg"
   name "BusKill"
   desc "Laptop kill cord that triggers a lockdown when unplugged"
   homepage "https://www.buskill.in/"
