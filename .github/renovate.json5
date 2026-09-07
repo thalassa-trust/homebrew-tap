@@ -1,0 +1,26 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  extends: [
+    "config:recommended",
+    ":semanticCommits",
+    "helpers:pinGitHubActionDigests",
+  ],
+
+  enabledManagers: ["github-actions"],
+
+  timezone: "Etc/UTC",
+  schedule: ["before 6am"],
+  labels: ["dependencies"],
+  commitMessageLowerCase: "never",
+
+  minimumReleaseAge: "7 days",
+  internalChecksFilter: "strict",
+  automerge: false,
+
+  // Load-bearing. Organisation rulesets require signatures on every branch
+  // with an empty bypass list. Committing through the API makes GitHub sign
+  // what Renovate creates; the git CLI would produce unverifiable commits
+  // and the push would be rejected.
+  platformCommit: "enabled",
+}
