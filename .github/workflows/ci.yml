@@ -36,10 +36,7 @@ jobs:
         with:
           advanced-security: false
 
-      # ghalint publishes no action, so its binary is fetched from its own
-      # release and checksummed. Version and checksum match
-      # thalassa-trust/github-org, so this is one upgrade to review rather than
-      # two.
+      # No published action. Fetch and checksum. Pin matches github-org.
       - name: ghalint
         env:
           GHALINT_VERSION: "1.5.6"
@@ -54,12 +51,11 @@ jobs:
           tar --extract --gzip --file "${workdir}/ghalint.tar.gz" --directory "${workdir}" ghalint
           "${workdir}/ghalint" run
 
-      # v2.2.0 looks for `ec-linux-amd64*` and misses the binary on this runner.
+      # v2.2.0 looks for ec-linux-amd64* and misses it here.
       - name: editorconfig-checker
         uses: editorconfig-checker/action-editorconfig-checker@51f63319f592f97930c73d9c46184d20bd206393 # v3.0.0
 
-      # `--offline` resolves local paths only, so a dead external URL is not a
-      # red gate on somebody else's outage.
+      # Offline: a dead external URL must not fail the gate.
       - name: lychee
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
@@ -90,8 +86,7 @@ jobs:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@f8d4222eb633e65c2a0157383cf80861fc7fae7f # 2026.09.07.1
 
-      # Symlink rather than `brew tap <name> <path>`, whose two-argument form
-      # Homebrew has deprecated for third-party taps.
+      # Two-argument `brew tap` is deprecated for third-party taps.
       - name: Link tap into Homebrew
         run: |
           tap_dir="$(brew --repository)/Library/Taps/thalassa-trust/homebrew-tap"
@@ -103,13 +98,11 @@ jobs:
 
       - name: brew audit
         env:
-          # `brew audit --online` hits the GitHub API and gets rate-limited without this.
+          # Without this, brew audit --online is rate-limited.
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: brew audit --cask --online --tap thalassa-trust/tap
 
-      # Proves the DMG mounts, the versioned .app bundle name resolves, and the
-      # CLI symlink lands. Homebrew 6 refuses to load untrusted third-party
-      # casks, hence the explicit trust.
+      # Homebrew 6 refuses untrusted third-party casks. Trust, then install.
       - name: Install smoke test
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}

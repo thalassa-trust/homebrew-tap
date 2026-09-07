@@ -9,8 +9,7 @@ indent_size = 2
 trim_trailing_whitespace = true
 
 [*.md]
-# Two trailing spaces are a hard line break in Markdown rather than a mistake,
-# and list continuations indent to the width of their marker.
+# Trailing spaces are hard breaks. List wrap follows the marker.
 indent_size = unset
 trim_trailing_whitespace = false
 
@@ -19,7 +18,5 @@ trim_trailing_whitespace = false
 indent_size = unset
 
 [.github/workflows/*.yml]
-# A `run: |` block is shell pasted into YAML: heredocs, continued commands and
-# case arms indent to what the shell reads. actionlint lints those blocks as
-# shell, which is the check with something to say about them.
+# run: | is shell. actionlint owns its indent.
 indent_size = unset

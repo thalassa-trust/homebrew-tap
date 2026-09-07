@@ -20,18 +20,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      # Full history. A secret is as reachable from an old commit as from the
-      # tip, and a shallow clone would scan neither it nor the commit that
-      # removed it.
+      # Full history: a shallow clone misses removed secrets.
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
 
-      # gitleaks/gitleaks-action requires a paid GITLEAKS_LICENSE for
-      # organisation-owned repositories, so the tool is fetched from its own
-      # release and checksummed instead. Same scanner, no licence.
+      # Paid licence on org repos. Fetch the binary.
       - name: gitleaks
         env:
           GITLEAKS_VERSION: "8.30.1"

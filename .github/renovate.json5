@@ -1,10 +1,7 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
 
-  // This repository has no package manifest and no lockfile. Its whole
-  // dependency surface is the action pins in `.github/workflows`. The
-  // manager list says that and nothing more, so adding a manifest later
-  // is a deliberate widening.
+  // No package manifest. enabledManagers is github-actions only.
   extends: [
     "config:recommended",
     ":dependencyDashboard",
@@ -26,10 +23,8 @@
   prHourlyLimit: 2,
   automerge: false,
 
-  // Load-bearing. Organisation rulesets require signatures on every branch
-  // with an empty bypass list. Committing through the API makes GitHub sign
-  // what Renovate creates; the git CLI would produce unverifiable commits
-  // and the push would be rejected.
+  // Load-bearing. The signature ruleset rejects unsigned git-CLI commits.
+  // platformCommit makes GitHub sign what Renovate creates.
   platformCommit: "enabled",
 
   osvVulnerabilityAlerts: true,
@@ -52,8 +47,5 @@
     },
   ],
 
-  // NOT managed here, deliberately: the tool versions in
-  // `.github/workflows/ci.yml` and `scan.yml` that are fetched by URL and
-  // checked against a `SHA256` beside them. Renovate can move a version
-  // string but cannot compute the checksum that must move with it.
+  // SHA256-fetched tool versions are a manual pair. Renovate cannot recompute the hash.
 }

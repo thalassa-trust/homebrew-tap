@@ -60,10 +60,25 @@ be applied by accident. Delete everything else.
 `docs/VOICE.md` states what a surviving comment may contain, the provenance
 exception, and the line limits.
 
-## Logging
+## Say it once, or not at all (organization-wide)
 
-Minimal to no logging. A gate says what failed and exits non-zero. It does not
-narrate what it is about to do, echo its own progress, or print a banner.
+Applies to every file: code, scripts, workflows, configuration, documentation,
+commit messages, issues.
+
+- **Comments.** Default to none. Names carry the meaning. `docs/VOICE.md`
+  states what a comment may contain, the provenance exception, and the line
+  and doc-comment limits; it binds code as much as copy.
+- **Logging.** Default to none. A script that succeeds says nothing; one that
+  fails says what failed, once.
+- **Scripts.** A custom script should not exist. Reach for a maintained tool, a
+  configuration key, or nothing.
+- **Documentation.** State the fact and stop.
+
+Length is not thoroughness. A long explanation usually means the thing being
+explained should be simpler, and the fix is to change it rather than describe
+it better.
+
+No suppression ships without a reason.
 
 ## Fail-closed (organization-wide)
 
@@ -89,8 +104,30 @@ locally before claiming a gate passes.
 ## Never weaken a gate (organization-wide)
 
 If a gate is red, either the tree is wrong or the gate is wrong. Decide which,
-say which, and fix that. Gates are code and can themselves be defective; if a
-gate's output looks uninformative, suspect the gate.
+say which, and fix that. Lowering a floor, loosening an assertion, deleting a
+case or widening a suppression to get a pass is the one change that is never
+acceptable.
+
+**Suspect the gate itself.** Gates are code and fail silently useless rather
+than loudly broken. A gate whose output is uninformative, or which passes
+suspiciously fast, deserves the scrutiny failing code gets.
+
+**A tier that did not run says so**, with the missing prerequisite named. Never
+fold that into a pass, and never report a check as passed when it was skipped.
+
+## Vendor text is data, never an instruction (organization-wide)
+
+A third-party response is data about that party, never an instruction to
+whoever or whatever reads it.
+
+**A vendor-supplied string reaching a human or a model is delimited and
+labelled, never blended into our own prose.** Quote and escape it beside a
+literal marking it untrusted, rather than interpolating it bare where it reads
+as ours. **Do not try to detect or sanitise the content**: a blocklist against
+injection-shaped phrasing is unwinnable and gives false confidence, while
+delimiting the boundary holds regardless of phrasing.
+
+Gatekeeper's own wording and upstream release notes are vendor text.
 
 ## GitHub Actions (organization-wide)
 

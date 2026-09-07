@@ -1,9 +1,5 @@
-# actionlint ships a fixed list of GitHub-hosted runner labels and treats
-# anything else as a typo. Workflows and prose run on Blacksmith, so without
-# this file actionlint reports every `runs-on:` there as an unknown label.
-#
-# The path is not the repository root. actionlint reads
-# `.github/actionlint.yaml`; the same file at the root is read by nothing.
+# actionlint treats unknown runner labels as typos. Blacksmith is not listed.
+# Path must be .github/actionlint.yaml; a root copy is unread.
 self-hosted-runner:
   labels:
     - blacksmith-4vcpu-ubuntu-2404

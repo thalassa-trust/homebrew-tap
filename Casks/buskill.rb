@@ -15,7 +15,6 @@ cask "buskill" do
 
   depends_on :macos
 
-  # Bundle name includes the version, so interpolate it.
   app "buskill-v#{version}.app"
   binary "#{appdir}/buskill-v#{version}.app/Contents/MacOS/buskill"
 
@@ -29,24 +28,19 @@ cask "buskill" do
   caveats do
     requires_rosetta
     <<~EOS
-      The upstream BusKill build is ad-hoc signed: no Developer ID and no
-      notarization ticket. On macOS 15 and later, Gatekeeper blocks it the first
-      time it is launched from Finder ("Apple could not verify ... is free of
-      malware"). Stripping the com.apple.quarantine attribute does not help:
-      the notarization check no longer depends on that flag.
+      Upstream is ad-hoc signed: no Developer ID, no notarization. Gatekeeper
+      blocks the first Finder launch ("Apple could not verify ... is free of
+      malware"). Stripping com.apple.quarantine does not change that.
 
-      To approve it, dismiss that dialog with "Done", then open
-        System Settings > Privacy & Security
-      and click "Open Anyway" for buskill-v#{version}.app.
+      Dismiss with Done, then System Settings > Privacy & Security > Open
+      Anyway for buskill-v#{version}.app.
 
-      The bundled CLI is not subject to this and works straight away:
-        buskill --help
+      The CLI is not subject to that block: buskill --help
 
-      BusKill stores its config next to the app bundle, e.g.
-      #{appdir}/.buskill/config.ini
+      Config is next to the app: #{appdir}/.buskill/config.ini
 
-      Do not use the app's built-in "-U/--upgrade" updater; it installs a second
-      copy outside of Homebrew's control. Use `brew upgrade --cask buskill`.
+      Do not use -U/--upgrade. It installs a second copy. Use
+      `brew upgrade --cask buskill`.
     EOS
   end
 end
