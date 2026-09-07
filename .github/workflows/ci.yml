@@ -54,8 +54,9 @@ jobs:
           tar --extract --gzip --file "${workdir}/ghalint.tar.gz" --directory "${workdir}" ghalint
           "${workdir}/ghalint" run
 
+      # v2.2.0 looks for `ec-linux-amd64*` and misses the binary on this runner.
       - name: editorconfig-checker
-        uses: editorconfig-checker/action-editorconfig-checker@840e866d93b8e032123c23bac69dece044d4d84c # v2.2.0
+        uses: editorconfig-checker/action-editorconfig-checker@51f63319f592f97930c73d9c46184d20bd206393 # v3.0.0
 
       # `--offline` resolves local paths only, so a dead external URL is not a
       # red gate on somebody else's outage.
