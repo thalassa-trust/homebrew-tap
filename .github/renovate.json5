@@ -1,7 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
 
-  // No package manifest. enabledManagers is github-actions only.
   extends: [
     "config:recommended",
     ":dependencyDashboard",
@@ -9,7 +8,47 @@
     "helpers:pinGitHubActionDigests",
   ],
 
-  enabledManagers: ["github-actions"],
+  enabledManagers: ["custom.regex", "github-actions"],
+
+  customManagers: [
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Casks/cua-driver\\.rb$/"],
+      matchStrings: [
+        'cask "cua-driver" do\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: 'cask "cua-driver" do\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.cua-driver",
+      depNameTemplate: "Cua Driver",
+      versioningTemplate: "semver",
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Casks/kraken-desktop\\.rb$/"],
+      matchStrings: [
+        'cask "kraken-desktop" do\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: 'cask "kraken-desktop" do\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.kraken-desktop",
+      depNameTemplate: "Kraken Desktop",
+      versioningTemplate: "loose",
+    },
+  ],
+
+  customDatasources: {
+    "cua-driver": {
+      defaultRegistryUrlTemplate: "https://api.github.com/repos/trycua/cua/releases?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($[$match(tag_name, /^cua-driver-rs-v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "cua-driver-rs-v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "cua-driver-rs-" & $version & "-darwin-universal.tar.gz"].digest, "sha256:") }) }) }',
+      ],
+    },
+    "kraken-desktop": {
+      defaultRegistryUrlTemplate: "https://desktop-downloads.kraken.com/latest.json",
+      transformTemplates: [
+        '{ "releases": [{ "version": version & "," & revision, "digest": files.macos.sha256 }] }',
+      ],
+    },
+  },
 
   timezone: "Etc/UTC",
   schedule: ["before 6am"],
@@ -39,6 +78,12 @@
 
   packageRules: [
     {
+      description: ["Kraken's feed omits release timestamps."],
+      matchManagers: ["custom.regex"],
+      matchPackageNames: ["Kraken Desktop"],
+      minimumReleaseAge: null,
+    },
+    {
       description: [
         "Action digest refreshes. The tag is unchanged and only the resolved digest moves, so this re-pins the same declared release. pinact checks the result in `gate:ci`.",
       ],
@@ -47,5 +92,5 @@
     },
   ],
 
-  // SHA256-fetched tool versions are a manual pair. Renovate cannot recompute the hash.
+  // SHA256-fetched workflow tools remain manual pairs.
 }

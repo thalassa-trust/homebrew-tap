@@ -1,10 +1,6 @@
 # homebrew-tap
 
-A [Homebrew](https://brew.sh) tap for [BusKill](https://www.buskill.in/) on
-macOS.
-
-BusKill is a laptop kill cord: a magnetic USB cable that locks, shuts down, or
-runs a custom trigger when it is physically separated from you.
+A Homebrew tap for macOS applications.
 
 | What | Value |
 | --- | --- |
@@ -15,23 +11,28 @@ runs a custom trigger when it is physically separated from you.
 ```sh
 brew tap thalassa-trust/tap
 brew install --cask buskill
+brew install --cask cua-driver
+brew install --cask kraken-desktop
 ```
 
-Upstream's macOS build is ad-hoc signed: no Developer ID, no notarization.
-Gatekeeper blocks the first Finder launch. Stripping `com.apple.quarantine`
-does not change that.
+| Cask | Application |
+| --- | --- |
+| `buskill` | [Laptop kill cord](https://www.buskill.in/) |
+| `cua-driver` | [Computer-use driver](https://cua.ai/docs/cua-driver) |
+| `kraken-desktop` | [Trading terminal](https://www.kraken.com/desktop) |
 
-Homebrew has no `--no-quarantine`.
+## BusKill
+
+Upstream's macOS build is ad-hoc signed. Gatekeeper blocks the first Finder
+launch, and removing `com.apple.quarantine` does not bypass that check.
 
 | Step | Action |
 | --- | --- |
-| 1 | Dismiss the dialog with Done, not Move to Trash |
-| 2 | System Settings > Privacy & Security > Open Anyway |
-| 3 | The installed `buskill-v*.app` |
+| 1 | Dismiss the dialog with `Done`, not `Move to Trash` |
+| 2 | System Settings > Privacy & Security > `Open Anyway` |
+| 3 | Select the installed `buskill-v*.app` |
 
 The CLI is not subject to that block.
-
-## Usage
 
 ```sh
 buskill --help
@@ -39,38 +40,37 @@ buskill --list-triggers
 buskill -a
 ```
 
-## Apple Silicon
-
-Thin x86_64. Runs under Rosetta 2.
+BusKill is x86_64 and requires Rosetta 2 on Apple Silicon.
 
 ```sh
 softwareupdate --install-rosetta --agree-to-license
+```
+
+The app's `-U` updater installs a second copy outside Homebrew. Upgrade it with
+Homebrew.
+
+## Cua Driver
+
+CuaDriver.app stays in `/Applications` so macOS retains its Accessibility and
+Screen Recording grants.
+
+```sh
+cua-driver permissions grant
+cua-driver telemetry disable
 ```
 
 ## Upgrade
 
 ```sh
 brew upgrade --cask buskill
-brew uninstall --cask buskill
-brew uninstall --zap --cask buskill
+brew upgrade --cask --greedy-auto-updates cua-driver
+brew upgrade --cask --greedy-auto-updates kraken-desktop
 ```
 
-The app's `-U` updater installs a second copy outside Homebrew.
+## Remove
 
-## Layout
-
-| Fact | Value |
-| --- | --- |
-| OS | macOS. Linux and Windows builds are out of scope |
-| Bundle | name includes the version |
-| Config | `.buskill/` next to the app, not `~/Library` |
-| Hash | copied from upstream's signed `SHA256SUMS` |
-
-## Upstream
-
-| What | Value |
-| --- | --- |
-| App | <https://github.com/BusKill/buskill-app> |
-| Docs | <https://docs.buskill.in> |
-| App licence | GPL-3.0 |
-| This tap | MIT |
+```sh
+brew uninstall --zap --cask buskill
+brew uninstall --zap --cask cua-driver
+brew uninstall --zap --cask kraken-desktop
+```

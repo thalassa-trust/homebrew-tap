@@ -102,24 +102,73 @@ jobs:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: brew audit --cask --online --tap thalassa-trust/tap
 
+  smoke:
+    name: Install ${{ matrix.cask }}
+    runs-on: macos-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cask: buskill
+            app: buskill-v
+            binary: buskill
+            versioned-app: true
+          - cask: cua-driver
+            app: CuaDriver
+            binary: cua-driver
+            versioned-app: false
+          - cask: kraken-desktop
+            app: Kraken Desktop
+            binary: ""
+            versioned-app: false
+    permissions:
+      contents: read
+    env:
+      HOMEBREW_NO_ANALYTICS: 1
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@f8d4222eb633e65c2a0157383cf80861fc7fae7f # 2026.09.07.1
+
+      # Two-argument `brew tap` is deprecated for third-party taps.
+      - name: Link tap into Homebrew
+        run: |
+          tap_dir="$(brew --repository)/Library/Taps/thalassa-trust/homebrew-tap"
+          mkdir -p "$(dirname "$tap_dir")"
+          ln -sfn "$GITHUB_WORKSPACE" "$tap_dir"
+
       # Homebrew refuses untrusted third-party casks. Trust, then install.
       - name: Install smoke test
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          brew trust --cask thalassa-trust/tap/buskill
-          brew install --cask thalassa-trust/tap/buskill
-          version="$(sed -n 's/^  version "\(.*\)"/\1/p' Casks/buskill.rb)"
+          cask="${{ matrix.cask }}"
+          brew trust --cask "thalassa-trust/tap/${cask}"
+          brew install --cask "thalassa-trust/tap/${cask}"
+          version="$(sed -n 's/^  version "\(.*\)"/\1/p' "Casks/${cask}.rb")"
           test -n "${version}"
-          test -d "/Applications/buskill-v${version}.app"
-          test -x "$(brew --prefix)/bin/buskill"
-          brew uninstall --cask thalassa-trust/tap/buskill
+          app="${{ matrix.app }}"
+          if [[ "${{ matrix['versioned-app'] }}" = true ]]; then
+            app="${app}${version}"
+          fi
+          test -d "/Applications/${app}.app"
+          binary="${{ matrix.binary }}"
+          if [[ -n "${binary}" ]]; then
+            test -x "$(brew --prefix)/bin/${binary}"
+          fi
+          brew uninstall --cask "thalassa-trust/tap/${cask}"
 
   gate:
     name: "gate:ci"
     if: always()
-    needs: [workflows, brew]
+    needs: [workflows, brew, smoke]
     runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 5
     permissions: {}
