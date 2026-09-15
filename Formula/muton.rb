@@ -6,15 +6,15 @@ class Muton < Formula
   sha256 "02a65eb0229d2ab69f655525a2de08494d48d5d55c9e9dc89603bb358b55a3ed"
   license "AGPL-3.0-only"
 
+  livecheck do
+    url :stable
+    strategy :github_latest
+  end
+
   depends_on arch: :arm64
 
   def install
     bin.install "muton-aarch64-apple-darwin/muton"
-  end
-
-  livecheck do
-    url :stable
-    strategy :github_latest
   end
 
   test do

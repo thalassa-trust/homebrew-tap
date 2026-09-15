@@ -6,15 +6,15 @@ class Mewt < Formula
   sha256 "e0ee0fb8eadeade3be22c582e1fcc188865e5a26b7889e1ebd9532099a873f6f"
   license "AGPL-3.0-only"
 
+  livecheck do
+    url :stable
+    strategy :github_latest
+  end
+
   depends_on arch: :arm64
 
   def install
     bin.install "mewt-aarch64-apple-darwin/mewt"
-  end
-
-  livecheck do
-    url :stable
-    strategy :github_latest
   end
 
   test do

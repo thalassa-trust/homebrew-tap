@@ -4,6 +4,12 @@ class Beankeeper < Formula
   version "0.8.0"
   license "Apache-2.0"
 
+  livecheck do
+    url "https://github.com/Govcraft/beankeeper/releases"
+    regex(%r{/releases/tag/beankeeper-cli-v(\d+\.\d+\.\d+)(?![.\d])}i)
+    strategy :page_match
+  end
+
   on_macos do
     on_arm do
       url "https://github.com/Govcraft/beankeeper/releases/download/beankeeper-cli-v0.8.0/bk-0.8.0-aarch64-apple-darwin.tar.gz"
@@ -16,18 +22,11 @@ class Beankeeper < Formula
   end
 
   def install
-    on_arm do
+    if Hardware::CPU.arm?
       bin.install "bk-#{version}-aarch64-apple-darwin/bk"
-    end
-    on_intel do
+    else
       bin.install "bk-#{version}-x86_64-apple-darwin/bk"
     end
-  end
-
-  livecheck do
-    url "https://github.com/Govcraft/beankeeper/releases"
-    regex(%r{/releases/tag/beankeeper-cli-v(\d+\.\d+\.\d+)(?![.\d])}i)
-    strategy :page_match
   end
 
   test do
