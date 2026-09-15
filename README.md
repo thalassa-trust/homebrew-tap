@@ -10,7 +10,6 @@ A Homebrew tap for macOS applications.
 
 ```sh
 brew tap thalassa-trust/tap
-brew install --cask brewui
 brew install --cask buskill
 brew install --cask cua-driver
 brew install --cask kraken-desktop
@@ -26,7 +25,6 @@ brew install vencord-installer
 
 | Cask | Application |
 | --- | --- |
-| `brewui` | [Official macOS GUI](https://github.com/Homebrew/brewui) |
 | `buskill` | [Laptop kill cord](https://www.buskill.in/) |
 | `cua-driver` | [Computer-use driver](https://cua.ai/docs/cua-driver) |
 | `kraken-desktop` | [Trading terminal](https://www.kraken.com/desktop) |
