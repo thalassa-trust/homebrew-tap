@@ -14,8 +14,11 @@ brew install --cask buskill
 brew install --cask cua-driver
 brew install --cask kraken-desktop
 brew install beankeeper
+brew install blacksmith
+brew install knip
 brew install mewt
 brew install muton
+brew install pplx
 brew install rustfilt
 brew install vencord-installer
 ```
@@ -29,8 +32,11 @@ brew install vencord-installer
 | Formula | Tool |
 | --- | --- |
 | `beankeeper` | [Double-entry accounting CLI](https://github.com/Govcraft/beankeeper) |
+| `blacksmith` | [CI runner CLI](https://blacksmith.sh) |
+| `knip` | [Unused export finder](https://knip.dev) |
 | `mewt` | [Mutation testing framework](https://github.com/trailofbits/mewt) |
 | `muton` | [TON mutation testing](https://github.com/trailofbits/muton) |
+| `pplx` | [Perplexity AI CLI](https://github.com/perplexityai/perplexity-cli) |
 | `rustfilt` | [Rust symbol demangler](https://github.com/luser/rustfilt) |
 | `vencord-installer` | [Vencord installer CLI](https://github.com/Vencord/Installer) |
 
