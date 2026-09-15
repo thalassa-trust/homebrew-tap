@@ -14,7 +14,7 @@ cask "cua-driver" do
   end
 
   auto_updates true
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "cua-driver-rs-#{version}-darwin-universal/CuaDriver.app"
   binary "#{appdir}/CuaDriver.app/Contents/MacOS/cua-driver"
