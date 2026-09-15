@@ -165,7 +165,7 @@ A cask checksum is copied from upstream's signed `SHA256SUMS`. A formula
 checksum is verified against the upstream release digest before commit.
 Changing either without that verification is a defect.
 
-The `caveats` stanza is the user-facing Gatekeeper instruction. It names the
+The cask `caveats` stanza is the user-facing Gatekeeper instruction. It names the
 dialog, the settings path, and the bundle. That instruction cannot fit the
 ten-word error limit in `docs/VOICE.md`; shortening it drops a step. The limit
 still binds every other string.

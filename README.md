@@ -17,6 +17,7 @@ brew install beankeeper
 brew install mewt
 brew install muton
 brew install rustfilt
+brew install vencord-installer
 ```
 
 | Cask | Application |
@@ -31,6 +32,7 @@ brew install rustfilt
 | `mewt` | [Mutation testing framework](https://github.com/trailofbits/mewt) |
 | `muton` | [TON mutation testing](https://github.com/trailofbits/muton) |
 | `rustfilt` | [Rust symbol demangler](https://github.com/luser/rustfilt) |
+| `vencord-installer` | [Vencord installer CLI](https://github.com/Vencord/Installer) |
 
 All formulae require Apple Silicon Macs.
 
@@ -72,13 +74,21 @@ cua-driver permissions grant
 cua-driver telemetry disable
 ```
 
+## Vencord Installer
+
+`--branch` has no development entry; patch by location.
+
+```sh
+vencord-installer --install --location "/Applications/Discord Development.app"
+```
+
 ## Upgrade
 
 ```sh
 brew upgrade --cask buskill
 brew upgrade --cask --greedy-auto-updates cua-driver
 brew upgrade --cask --greedy-auto-updates kraken-desktop
-brew upgrade beankeeper mewt muton rustfilt
+brew upgrade beankeeper mewt muton rustfilt vencord-installer
 ```
 
 ## Remove
@@ -87,5 +97,5 @@ brew upgrade beankeeper mewt muton rustfilt
 brew uninstall --zap --cask buskill
 brew uninstall --zap --cask cua-driver
 brew uninstall --zap --cask kraken-desktop
-brew uninstall beankeeper mewt muton rustfilt
+brew uninstall beankeeper mewt muton rustfilt vencord-installer
 ```
