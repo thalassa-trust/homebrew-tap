@@ -14,6 +14,7 @@ class Mewt < Formula
   depends_on arch: :arm64
 
   def install
+    opoo "DEBUG staging: #{Dir.children(".").inspect}"
     bin.install "mewt-aarch64-apple-darwin/mewt"
   end
 
