@@ -11,10 +11,11 @@ class Muton < Formula
     strategy :github_latest
   end
 
+  depends_on :macos
   depends_on arch: :arm64
 
   def install
-    bin.install "muton-aarch64-apple-darwin/muton"
+    bin.install "muton"
   end
 
   test do

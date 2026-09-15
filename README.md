@@ -32,7 +32,7 @@ brew install rustfilt
 | `muton` | [TON mutation testing](https://github.com/trailofbits/muton) |
 | `rustfilt` | [Rust symbol demangler](https://github.com/luser/rustfilt) |
 
-`mewt` and `muton` ship Apple Silicon binaries only.
+All formulae require Apple Silicon Macs.
 
 ## BusKill
 

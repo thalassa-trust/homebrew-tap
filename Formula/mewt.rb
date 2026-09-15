@@ -11,11 +11,11 @@ class Mewt < Formula
     strategy :github_latest
   end
 
+  depends_on :macos
   depends_on arch: :arm64
 
   def install
-    opoo "DEBUG staging: #{Dir.children(".").inspect}"
-    bin.install "mewt-aarch64-apple-darwin/mewt"
+    bin.install "mewt"
   end
 
   test do
