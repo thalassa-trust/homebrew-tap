@@ -11,8 +11,8 @@ class Mewt < Formula
     strategy :github_latest
   end
 
-  depends_on :macos
   depends_on arch: :arm64
+  depends_on :macos
 
   def install
     bin.install "mewt"

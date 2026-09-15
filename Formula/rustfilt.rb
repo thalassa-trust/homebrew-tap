@@ -11,8 +11,8 @@ class Rustfilt < Formula
     strategy :crates_io
   end
 
-  depends_on :macos
   depends_on arch: :arm64
+  depends_on :macos
   depends_on "rust" => :build
 
   def install
