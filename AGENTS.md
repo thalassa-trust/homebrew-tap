@@ -153,15 +153,17 @@ reason the diff cannot show.
 
 ## This tap
 
-The cask lives under `Casks/`. `brew style` is the Ruby formatter and linter.
-`brew audit --cask --online` is the checker. No second Ruby linter is added
-beside them.
+Casks live under `Casks/`, formulae under `Formula/`. `brew style` is the
+Ruby formatter and linter. `brew audit --cask --online` checks casks,
+`brew audit --formula --online` checks formulae. No second Ruby linter is
+added beside them.
 
 The brew job runs on `macos-latest` because `brew style` and `brew audit` need
 Homebrew on macOS. That is the one runner that is not Blacksmith.
 
-A cask checksum is copied from upstream's signed `SHA256SUMS`. Changing one
-without that verification is a defect.
+A cask checksum is copied from upstream's signed `SHA256SUMS`. A formula
+checksum is verified against the upstream release digest before commit.
+Changing either without that verification is a defect.
 
 The `caveats` stanza is the user-facing Gatekeeper instruction. It names the
 dialog, the settings path, and the bundle. That instruction cannot fit the
@@ -179,10 +181,10 @@ versioning, not `vMAJOR.MINOR.PATCH`.
 | Job | Tools |
 | --- | --- |
 | `Workflows and prose` | actionlint, pinact, zizmor, ghalint, editorconfig-checker, lychee, markdownlint-cli2, typos |
-| `Homebrew` | `brew style`, `brew audit --cask --online`, install smoke test |
+| `Homebrew` | `brew style`, `brew audit --cask --online`, `brew audit --formula --online`, install smoke test |
 | `Secret scan` | gitleaks, over history and the working tree |
 
-`brew style` is the local loop. Run it before pushing a cask change.
+`brew style` is the local loop. Run it before pushing a cask or formula change.
 
 CodeQL is not run. The repository is on `crypto-no-codeql`.
 

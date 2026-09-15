@@ -35,6 +35,61 @@
       depNameTemplate: "Kraken Desktop",
       versioningTemplate: "loose",
     },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Formula/mewt\\.rb$/"],
+      matchStrings: [
+        '  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: '  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.mewt",
+      depNameTemplate: "Mewt",
+      versioningTemplate: "semver",
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Formula/muton\\.rb$/"],
+      matchStrings: [
+        '  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: '  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.muton",
+      depNameTemplate: "Muton",
+      versioningTemplate: "semver",
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Formula/beankeeper\\.rb$/"],
+      matchStrings: [
+        'on_arm do\n      url "https://github.com/Govcraft/beankeeper/releases/download/beankeeper-cli-v(?<currentValue>[^"]+)/bk-[^"]+-aarch64-apple-darwin.tar.gz"\n      sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: 'on_arm do\n      url "https://github.com/Govcraft/beankeeper/releases/download/beankeeper-cli-v{{{newValue}}}/bk-{{{newValue}}}-aarch64-apple-darwin.tar.gz"\n      sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.beankeeper-arm",
+      depNameTemplate: "Beankeeper arm64",
+      versioningTemplate: "semver",
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Formula/beankeeper\\.rb$/"],
+      matchStrings: [
+        'on_intel do\n      url "https://github.com/Govcraft/beankeeper/releases/download/beankeeper-cli-v(?<currentValue>[^"]+)/bk-[^"]+-x86_64-apple-darwin.tar.gz"\n      sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: 'on_intel do\n      url "https://github.com/Govcraft/beankeeper/releases/download/beankeeper-cli-v{{{newValue}}}/bk-{{{newValue}}}-x86_64-apple-darwin.tar.gz"\n      sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.beankeeper-intel",
+      depNameTemplate: "Beankeeper x86_64",
+      versioningTemplate: "semver",
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Formula/rustfilt\\.rb$/"],
+      matchStrings: [
+        '  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: '  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.rustfilt",
+      depNameTemplate: "Rustfilt",
+      versioningTemplate: "semver",
+    },
   ],
 
   customDatasources: {
@@ -48,6 +103,36 @@
       defaultRegistryUrlTemplate: "https://desktop-downloads.kraken.com/latest.json",
       transformTemplates: [
         '{ "releases": [{ "version": version & "," & revision, "digest": files.macos.sha256 }] }',
+      ],
+    },
+    "mewt": {
+      defaultRegistryUrlTemplate: "https://api.github.com/repos/trailofbits/mewt/releases?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($[$match(tag_name, /^v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "mewt-aarch64-apple-darwin.tar.xz"].digest, "sha256:") }) }) }',
+      ],
+    },
+    "muton": {
+      defaultRegistryUrlTemplate: "https://api.github.com/repos/trailofbits/muton/releases?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($[$match(tag_name, /^v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "muton-aarch64-apple-darwin.tar.xz"].digest, "sha256:") }) }) }',
+      ],
+    },
+    "beankeeper-arm": {
+      defaultRegistryUrlTemplate: "https://api.github.com/repos/Govcraft/beankeeper/releases?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($[$match(tag_name, /^beankeeper-cli-v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "beankeeper-cli-v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "bk-" & $version & "-aarch64-apple-darwin.tar.gz"].digest, "sha256:") }) }) }',
+      ],
+    },
+    "beankeeper-intel": {
+      defaultRegistryUrlTemplate: "https://api.github.com/repos/Govcraft/beankeeper/releases?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($[$match(tag_name, /^beankeeper-cli-v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "beankeeper-cli-v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "bk-" & $version & "-x86_64-apple-darwin.tar.gz"].digest, "sha256:") }) }) }',
+      ],
+    },
+    "rustfilt": {
+      defaultRegistryUrlTemplate: "https://crates.io/api/v1/crates/rustfilt/versions?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($filter(versions, function($v) { $not($v.yanked) }), function($v) { { "version": $v.num, "releaseTimestamp": $v.updated_at, "digest": $v.checksum } }) }',
       ],
     },
   },

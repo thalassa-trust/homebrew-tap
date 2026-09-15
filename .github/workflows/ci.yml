@@ -96,14 +96,19 @@ jobs:
       - name: brew style
         run: brew style thalassa-trust/tap
 
-      - name: brew audit
+      - name: brew audit casks
         env:
           # Without this, brew audit --online is rate-limited.
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: brew audit --cask --online --tap thalassa-trust/tap
 
+      - name: brew audit formulae
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: brew audit --formula --online --tap thalassa-trust/tap
+
   smoke:
-    name: Install ${{ matrix.cask }}
+    name: Install ${{ matrix.cask }}${{ matrix.formula }}
     runs-on: macos-latest
     timeout-minutes: 20
     strategy:
@@ -111,16 +116,39 @@ jobs:
       matrix:
         include:
           - cask: buskill
+            formula: ""
             app: buskill-v
             binary: buskill
             versioned-app: true
           - cask: cua-driver
+            formula: ""
             app: CuaDriver
             binary: cua-driver
             versioned-app: false
           - cask: kraken-desktop
+            formula: ""
             app: Kraken Desktop
             binary: ""
+            versioned-app: false
+          - cask: ""
+            formula: beankeeper
+            app: ""
+            binary: bk
+            versioned-app: false
+          - cask: ""
+            formula: mewt
+            app: ""
+            binary: mewt
+            versioned-app: false
+          - cask: ""
+            formula: muton
+            app: ""
+            binary: muton
+            versioned-app: false
+          - cask: ""
+            formula: rustfilt
+            app: ""
+            binary: rustfilt
             versioned-app: false
     permissions:
       contents: read
@@ -149,6 +177,13 @@ jobs:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          if [[ -n "${{ matrix.formula }}" ]]; then
+            formula="${{ matrix.formula }}"
+            brew install "thalassa-trust/tap/${formula}"
+            test -x "$(brew --prefix)/bin/${{ matrix.binary }}"
+            brew uninstall "thalassa-trust/tap/${formula}"
+            exit 0
+          fi
           cask="${{ matrix.cask }}"
           brew trust --cask "thalassa-trust/tap/${cask}"
           brew install --cask "thalassa-trust/tap/${cask}"

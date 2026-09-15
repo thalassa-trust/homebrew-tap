@@ -13,6 +13,10 @@ brew tap thalassa-trust/tap
 brew install --cask buskill
 brew install --cask cua-driver
 brew install --cask kraken-desktop
+brew install beankeeper
+brew install mewt
+brew install muton
+brew install rustfilt
 ```
 
 | Cask | Application |
@@ -20,6 +24,15 @@ brew install --cask kraken-desktop
 | `buskill` | [Laptop kill cord](https://www.buskill.in/) |
 | `cua-driver` | [Computer-use driver](https://cua.ai/docs/cua-driver) |
 | `kraken-desktop` | [Trading terminal](https://www.kraken.com/desktop) |
+
+| Formula | Tool |
+| --- | --- |
+| `beankeeper` | [Double-entry accounting CLI](https://github.com/Govcraft/beankeeper) |
+| `mewt` | [Mutation testing framework](https://github.com/trailofbits/mewt) |
+| `muton` | [TON mutation testing](https://github.com/trailofbits/muton) |
+| `rustfilt` | [Rust symbol demangler](https://github.com/luser/rustfilt) |
+
+`mewt` and `muton` ship Apple Silicon binaries only.
 
 ## BusKill
 
@@ -65,6 +78,7 @@ cua-driver telemetry disable
 brew upgrade --cask buskill
 brew upgrade --cask --greedy-auto-updates cua-driver
 brew upgrade --cask --greedy-auto-updates kraken-desktop
+brew upgrade beankeeper mewt muton rustfilt
 ```
 
 ## Remove
@@ -73,4 +87,5 @@ brew upgrade --cask --greedy-auto-updates kraken-desktop
 brew uninstall --zap --cask buskill
 brew uninstall --zap --cask cua-driver
 brew uninstall --zap --cask kraken-desktop
+brew uninstall beankeeper mewt muton rustfilt
 ```
