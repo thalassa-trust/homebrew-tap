@@ -5,9 +5,18 @@ class Beankeeper < Formula
   license "Apache-2.0"
 
   livecheck do
-    url "https://github.com/Govcraft/beankeeper/releases"
-    regex(%r{/releases/tag/beankeeper-cli-v(\d+\.\d+\.\d+)(?![.\d])}i)
-    strategy :page_match
+    url :stable
+    regex(/^beankeeper-cli-v?(\d+(?:\.\d+)+)$/i)
+    strategy :github_release do |json, regex|
+      json.map do |release|
+        next if release["draft"] || release["prerelease"]
+
+        match = release["tag_name"]&.match(regex)
+        next if match.blank?
+
+        match[1]
+      end
+    end
   end
 
   on_macos do
