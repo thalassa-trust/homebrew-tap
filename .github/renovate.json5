@@ -3,10 +3,12 @@
 
   extends: [
     "config:recommended",
-    ":dependencyDashboard",
     ":semanticCommits",
     "helpers:pinGitHubActionDigests",
   ],
+
+  // No dashboard issue. Updates arrive as PRs with their own context.
+  dependencyDashboard: false,
 
   enabledManagers: ["custom.regex", "github-actions"],
 
