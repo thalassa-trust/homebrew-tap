@@ -79,6 +79,17 @@
       depNameTemplate: "Rustfilt",
       versioningTemplate: "semver",
     },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Formula/pgrun\\.rb$/"],
+      matchStrings: [
+        '  url "https://github\\.com/pgrundev/pgrun-cli/releases/download/v[^"]+/pgrun_[^"]+_darwin_arm64\\.tar\\.gz"\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: '  url "https://github.com/pgrundev/pgrun-cli/releases/download/v{{{newValue}}}/pgrun_{{{newValue}}}_darwin_arm64.tar.gz"\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.pgrun",
+      depNameTemplate: "PGRun CLI",
+      versioningTemplate: "semver",
+    },
   ],
 
   customDatasources: {
@@ -110,6 +121,12 @@
       defaultRegistryUrlTemplate: "https://api.github.com/repos/Govcraft/beankeeper/releases?per_page=100",
       transformTemplates: [
         '{ "releases": $map($[$match(tag_name, /^beankeeper-cli-v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "beankeeper-cli-v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "bk-" & $version & "-aarch64-apple-darwin.tar.gz"].digest, "sha256:") }) }) }',
+      ],
+    },
+    "pgrun": {
+      defaultRegistryUrlTemplate: "https://api.github.com/repos/pgrundev/pgrun-cli/releases?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($[$match(tag_name, /^v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "pgrun_" & $version & "_darwin_arm64.tar.gz"].digest, "sha256:") }) }) }',
       ],
     },
     "rustfilt": {
