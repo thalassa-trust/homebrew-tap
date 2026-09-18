@@ -2,7 +2,6 @@ class Pplx < Formula
   desc "Perplexity AI CLI"
   homepage "https://github.com/perplexityai/perplexity-cli"
   url "https://github.com/perplexityai/perplexity-cli/releases/download/v0.2.3/pplx-aarch64-apple-darwin.bin"
-  version "0.2.3"
   sha256 "9af14c21589f6782e2dae0e3f2a4c21be11112f46a7aa499adcf9f9f58d3d5d0"
 
   livecheck do

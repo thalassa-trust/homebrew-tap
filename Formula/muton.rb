@@ -2,7 +2,6 @@ class Muton < Formula
   desc "Mutation testing framework for TON smart contracts"
   homepage "https://github.com/trailofbits/muton"
   url "https://github.com/trailofbits/muton/releases/download/v3.1.0/muton-aarch64-apple-darwin.tar.xz"
-  version "3.1.0"
   sha256 "02a65eb0229d2ab69f655525a2de08494d48d5d55c9e9dc89603bb358b55a3ed"
   license "AGPL-3.0-only"
 

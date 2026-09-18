@@ -2,7 +2,6 @@ class Rustfilt < Formula
   desc "Demangle Rust symbols"
   homepage "https://github.com/luser/rustfilt"
   url "https://static.crates.io/crates/rustfilt/rustfilt-0.2.1.crate"
-  version "0.2.1"
   sha256 "c8d748b182c8f95224336d20dcc5609598af612581ce60cfb29da4dc8d0091f2"
   license "Apache-2.0"
 
