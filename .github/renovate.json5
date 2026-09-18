@@ -39,9 +39,9 @@
       customType: "regex",
       managerFilePatterns: ["/^Formula/mewt\\.rb$/"],
       matchStrings: [
-        '  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+        '  url "https://github\\.com/trailofbits/mewt/releases/download/v[^"]+/mewt-aarch64-apple-darwin\\.tar\\.xz"\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
       ],
-      autoReplaceStringTemplate: '  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      autoReplaceStringTemplate: '  url "https://github.com/trailofbits/mewt/releases/download/v{{{newValue}}}/mewt-aarch64-apple-darwin.tar.xz"\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
       datasourceTemplate: "custom.mewt",
       depNameTemplate: "Mewt",
       versioningTemplate: "semver",
@@ -50,9 +50,9 @@
       customType: "regex",
       managerFilePatterns: ["/^Formula/muton\\.rb$/"],
       matchStrings: [
-        '  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+        '  url "https://github\\.com/trailofbits/muton/releases/download/v[^"]+/muton-aarch64-apple-darwin\\.tar\\.xz"\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
       ],
-      autoReplaceStringTemplate: '  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      autoReplaceStringTemplate: '  url "https://github.com/trailofbits/muton/releases/download/v{{{newValue}}}/muton-aarch64-apple-darwin.tar.xz"\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
       datasourceTemplate: "custom.muton",
       depNameTemplate: "Muton",
       versioningTemplate: "semver",
@@ -61,9 +61,9 @@
       customType: "regex",
       managerFilePatterns: ["/^Formula/beankeeper\\.rb$/"],
       matchStrings: [
-        '  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+        '  url "https://github\\.com/Govcraft/beankeeper/releases/download/beankeeper-cli-v[^"]+/bk-[^"]+-aarch64-apple-darwin\\.tar\\.gz"\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
       ],
-      autoReplaceStringTemplate: '  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      autoReplaceStringTemplate: '  url "https://github.com/Govcraft/beankeeper/releases/download/beankeeper-cli-v{{{newValue}}}/bk-{{{newValue}}}-aarch64-apple-darwin.tar.gz"\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
       datasourceTemplate: "custom.beankeeper",
       depNameTemplate: "Beankeeper",
       versioningTemplate: "semver",
@@ -72,9 +72,9 @@
       customType: "regex",
       managerFilePatterns: ["/^Formula/rustfilt\\.rb$/"],
       matchStrings: [
-        '  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+        '  url "https://static\\.crates\\.io/crates/rustfilt/rustfilt-[^"]+\\.crate"\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
       ],
-      autoReplaceStringTemplate: '  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      autoReplaceStringTemplate: '  url "https://static.crates.io/crates/rustfilt/rustfilt-{{{newValue}}}.crate"\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
       datasourceTemplate: "custom.rustfilt",
       depNameTemplate: "Rustfilt",
       versioningTemplate: "semver",
@@ -88,6 +88,28 @@
       autoReplaceStringTemplate: '  url "https://github.com/pgrundev/pgrun-cli/releases/download/v{{{newValue}}}/pgrun_{{{newValue}}}_darwin_arm64.tar.gz"\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
       datasourceTemplate: "custom.pgrun",
       depNameTemplate: "PGRun CLI",
+      versioningTemplate: "semver",
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Formula/pplx\\.rb$/"],
+      matchStrings: [
+        '  url "https://github\\.com/perplexityai/perplexity-cli/releases/download/v[^"]+/pplx-aarch64-apple-darwin\\.bin"\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: '  url "https://github.com/perplexityai/perplexity-cli/releases/download/v{{{newValue}}}/pplx-aarch64-apple-darwin.bin"\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.pplx",
+      depNameTemplate: "Perplexity CLI",
+      versioningTemplate: "semver",
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^Casks/buskill\\.rb$/"],
+      matchStrings: [
+        'cask "buskill" do\n  version "(?<currentValue>[^"]+)"\n  sha256 "(?<currentDigest>[a-f0-9]{64})"',
+      ],
+      autoReplaceStringTemplate: 'cask "buskill" do\n  version "{{{newValue}}}"\n  sha256 "{{{newDigest}}}"',
+      datasourceTemplate: "custom.buskill",
+      depNameTemplate: "BusKill",
       versioningTemplate: "semver",
     },
   ],
@@ -127,6 +149,21 @@
       defaultRegistryUrlTemplate: "https://api.github.com/repos/pgrundev/pgrun-cli/releases?per_page=100",
       transformTemplates: [
         '{ "releases": $map($[$match(tag_name, /^v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "pgrun_" & $version & "_darwin_arm64.tar.gz"].digest, "sha256:") }) }) }',
+      ],
+    },
+    "pplx": {
+      defaultRegistryUrlTemplate: "https://api.github.com/repos/perplexityai/perplexity-cli/releases?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($[$match(tag_name, /^v[0-9]+\\.[0-9]+\\.[0-9]+$/)], function($release) { ($version := $substringAfter($release.tag_name, "v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "pplx-aarch64-apple-darwin.bin"].digest, "sha256:") }) }) }',
+      ],
+    },
+    // Assets uploaded before GitHub started recording digests carry none, so a
+    // release that predates that reaches the PR with an empty sha256 and fails
+    // the `smoke` job rather than landing a wrong one.
+    "buskill": {
+      defaultRegistryUrlTemplate: "https://api.github.com/repos/BusKill/buskill-app/releases?per_page=100",
+      transformTemplates: [
+        '{ "releases": $map($[$match(tag_name, /^v[0-9]+\\.[0-9]+(\\.[0-9]+)?$/)], function($release) { ($version := $substringAfter($release.tag_name, "v"); { "version": $version, "releaseTimestamp": $release.published_at, "digest": $substringAfter($release.assets[name = "buskill-mac-v" & $version & "-x86_64.dmg"].digest, "sha256:") }) }) }',
       ],
     },
     "rustfilt": {
