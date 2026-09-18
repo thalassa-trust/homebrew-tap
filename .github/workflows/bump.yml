@@ -1,0 +1,79 @@
+name: Bump
+
+# blacksmith, knip and vencord-installer publish no sha256 any API exposes:
+# a CDN binary, an npm tarball (sha512 and sha1 only), and a GitHub source
+# archive. Renovate cannot fill the checksum, so Homebrew's own bump computes
+# it from the download. Every other formula and cask in this tap is Renovate's.
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  bump:
+    name: Bump ${{ matrix.formula }}
+    runs-on: macos-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        formula:
+          - blacksmith
+          - knip
+          - vencord-installer
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@f8d4222eb633e65c2a0157383cf80861fc7fae7f # 2026.09.07.1
+
+      # bump-formula-pr edits the formula where the tap lives, so the tap path
+      # points at this checkout and the change lands in the working tree.
+      - name: Tap this checkout
+        run: |
+          tap_dir="$(brew --repository)/Library/Taps/thalassa-trust/homebrew-tap"
+          mkdir -p "$(dirname "$tap_dir")"
+          ln -s "${GITHUB_WORKSPACE}" "${tap_dir}"
+
+      - name: Resolve the newest version
+        id: livecheck
+        env:
+          FORMULA: ${{ matrix.formula }}
+        run: |
+          latest="$(brew livecheck --formula --newer-only --quiet --json "thalassa-trust/tap/${FORMULA}" | jq -r '.[0].version.latest // empty')"
+          printf 'version=%s\n' "${latest}" >> "${GITHUB_OUTPUT}"
+          printf 'resolved %s for %s\n' "${latest:-no newer version}" "${FORMULA}"
+
+      - name: Write the new version and checksum
+        if: steps.livecheck.outputs.version != ''
+        env:
+          FORMULA: ${{ matrix.formula }}
+          VERSION: ${{ steps.livecheck.outputs.version }}
+        run: |
+          brew bump-formula-pr --write-only --no-audit --no-browse \
+            --version "${VERSION}" "thalassa-trust/tap/${FORMULA}"
+
+      # sign-commits writes through the API, which signs. The signature ruleset
+      # rejects what the git CLI would push.
+      - name: Open a pull request
+        if: steps.livecheck.outputs.version != ''
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          sign-commits: true
+          branch: bump/${{ matrix.formula }}
+          delete-branch: true
+          commit-message: "chore(${{ matrix.formula }}): ${{ steps.livecheck.outputs.version }}"
+          title: "chore(${{ matrix.formula }}): ${{ steps.livecheck.outputs.version }}"
+          body: |
+            `brew livecheck` reports ${{ steps.livecheck.outputs.version }};
+            `brew bump-formula-pr` wrote the url and the checksum it computed
+            from that download.
+          labels: dependencies
