@@ -1,5 +1,5 @@
 class Blacksmith < Formula
-  desc "Blacksmith CI runner CLI"
+  desc "CLI for the Blacksmith CI runner"
   homepage "https://blacksmith.sh"
   url "https://clireleases.blacksmith.sh/cli/v0.4.58/darwin/arm64/blacksmith"
   version "0.4.58"

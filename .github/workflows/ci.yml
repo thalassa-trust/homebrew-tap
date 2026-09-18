@@ -150,6 +150,31 @@ jobs:
             app: ""
             binary: rustfilt
             versioned-app: false
+          - cask: ""
+            formula: blacksmith
+            app: ""
+            binary: blacksmith
+            versioned-app: false
+          - cask: ""
+            formula: knip
+            app: ""
+            binary: knip
+            versioned-app: false
+          - cask: ""
+            formula: pgrun
+            app: ""
+            binary: pgrun
+            versioned-app: false
+          - cask: ""
+            formula: pplx
+            app: ""
+            binary: pplx
+            versioned-app: false
+          - cask: ""
+            formula: vencord-installer
+            app: ""
+            binary: vencord-installer
+            versioned-app: false
     permissions:
       contents: read
     env:

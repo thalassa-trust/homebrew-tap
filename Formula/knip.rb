@@ -1,5 +1,5 @@
 class Knip < Formula
-  desc "Find unused files, dependencies, and exports in JavaScript and TypeScript projects"
+  desc "Find unused files, dependencies and exports in JavaScript and TypeScript"
   homepage "https://knip.dev"
   url "https://registry.npmjs.org/knip/-/knip-6.35.1.tgz"
   version "6.35.1"
@@ -11,9 +11,9 @@ class Knip < Formula
     strategy :npm
   end
 
-  depends_on "node"
   depends_on arch: :arm64
   depends_on :macos
+  depends_on "node"
 
   def install
     system "npm", "install", *std_npm_args
